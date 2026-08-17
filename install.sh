@@ -69,9 +69,9 @@ if [[ "$OS_TYPE" == "macos" ]]; then
   echo -e "\n${BLUE}==> Preparing macOS Installation...${NC}"
   
   if [[ "$ARCH_TYPE" == "arm64" ]]; then
-    PATTERN="aarch64.*\.dmg|aarch64.*\.app\.tar\.gz|arm64.*\.dmg"
+    PATTERN="(aarch64|arm64).*\.dmg"
   else
-    PATTERN="x64.*\.dmg|x86_64.*\.dmg|darwin.*\.dmg"
+    PATTERN="(x64|x86_64).*\.dmg"
   fi
 
   DOWNLOAD_URL=$(echo "$RELEASE_JSON" | grep -o 'https://[^"]*' | grep -iE "$PATTERN" | head -n 1 || true)
@@ -118,15 +118,15 @@ if [[ "$OS_TYPE" == "linux" ]]; then
   echo -e "\n${BLUE}==> Preparing Linux Installation...${NC}"
 
   if [[ "$ARCH_TYPE" == "arm64" ]]; then
-    PATTERN="aarch64.*\.appimage|arm64.*\.appimage"
+    PATTERN="(aarch64|arm64).*\.appimage"
   else
-    PATTERN="amd64.*\.appimage|x86_64.*\.appimage|\.appimage"
+    PATTERN="(amd64|x86_64).*\.appimage"
   fi
 
   DOWNLOAD_URL=$(echo "$RELEASE_JSON" | grep -o 'https://[^"]*' | grep -iE "$PATTERN" | head -n 1 || true)
 
   if [[ -z "$DOWNLOAD_URL" ]]; then
-    echo -e "${RED}Error: Could not locate a compatible Linux AppImage release asset.${NC}"
+    echo -e "${RED}Error: Could not locate a compatible Linux AppImage release asset for ${ARCH_TYPE}.${NC}"
     echo -e "Please download manually from: ${CYAN}https://github.com/${REPO}/releases${NC}"
     exit 1
   fi
