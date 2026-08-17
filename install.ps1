@@ -48,9 +48,9 @@ $downloadUrl = $null
 
 if ($release -and $release.assets) {
     if ($arch -eq "arm64") {
-        $asset = $release.assets | Where-Object { $_.name -match 'arm64.*\.exe$' -or $_.name -match 'aarch64.*\.exe$' } | Select-Object -First 1
+        $asset = $release.assets | Where-Object { $_.name -match '(?i)arm64.*\.exe$' -or $_.name -match '(?i)aarch64.*\.exe$' } | Select-Object -First 1
     } else {
-        $asset = $release.assets | Where-Object { $_.name -match 'x64.*-setup\.exe$' -or $_.name -match 'x64.*\.msi$' -or $_.name -match '\.exe$' } | Select-Object -First 1
+        $asset = $release.assets | Where-Object { $_.name -match '(?i)(x64|amd64).*-setup\.exe$' -or $_.name -match '(?i)(x64|amd64).*\.msi$' -or $_.name -match '(?i)\.exe$' } | Select-Object -First 1
     }
 
     if ($asset) {
