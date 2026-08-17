@@ -62,7 +62,7 @@ API_URL="https://api.github.com/repos/${REPO}/releases/latest"
 
 echo -e "Fetching latest release metadata from ${CYAN}${REPO}${NC}..."
 
-RELEASE_JSON=$(curl -sSL -H "Accept: application/vnd.github.v3+json" "$API_URL" || true)
+RELEASE_JSON=$(curl -sSL -H "User-Agent: RoleTect-Installer" -H "Accept: application/vnd.github.v3+json" "$API_URL" || true)
 
 # --- Download & Install for macOS ---
 if [[ "$OS_TYPE" == "macos" ]]; then
@@ -74,10 +74,10 @@ if [[ "$OS_TYPE" == "macos" ]]; then
     PATTERN="x64.*\.dmg|x86_64.*\.dmg|darwin.*\.dmg"
   fi
 
-  DOWNLOAD_URL=$(echo "$RELEASE_JSON" | grep -o 'https://[^"]*' | grep -E "$PATTERN" | head -n 1 || true)
+  DOWNLOAD_URL=$(echo "$RELEASE_JSON" | grep -o 'https://[^"]*' | grep -iE "$PATTERN" | head -n 1 || true)
 
   if [[ -z "$DOWNLOAD_URL" ]]; then
-    DOWNLOAD_URL=$(echo "$RELEASE_JSON" | grep -o 'https://[^"]*' | grep -E '\.dmg$' | head -n 1 || true)
+    DOWNLOAD_URL=$(echo "$RELEASE_JSON" | grep -o 'https://[^"]*' | grep -iE '\.dmg$' | head -n 1 || true)
   fi
 
   if [[ -z "$DOWNLOAD_URL" ]]; then
@@ -118,12 +118,12 @@ if [[ "$OS_TYPE" == "linux" ]]; then
   echo -e "\n${BLUE}==> Preparing Linux Installation...${NC}"
 
   if [[ "$ARCH_TYPE" == "arm64" ]]; then
-    PATTERN="aarch64.*\.AppImage|arm64.*\.AppImage"
+    PATTERN="aarch64.*\.appimage|arm64.*\.appimage"
   else
-    PATTERN="amd64.*\.AppImage|x86_64.*\.AppImage|\.AppImage"
+    PATTERN="amd64.*\.appimage|x86_64.*\.appimage|\.appimage"
   fi
 
-  DOWNLOAD_URL=$(echo "$RELEASE_JSON" | grep -o 'https://[^"]*' | grep -E "$PATTERN" | head -n 1 || true)
+  DOWNLOAD_URL=$(echo "$RELEASE_JSON" | grep -o 'https://[^"]*' | grep -iE "$PATTERN" | head -n 1 || true)
 
   if [[ -z "$DOWNLOAD_URL" ]]; then
     echo -e "${RED}Error: Could not locate a compatible Linux AppImage release asset.${NC}"
